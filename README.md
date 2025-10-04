@@ -1,39 +1,26 @@
-# 🎲 Telegram Dice Bot
+# Telegram Bot - Rewards & Games System
 
-A comprehensive Telegram bot built with Python, aiogram, and PostgreSQL for high-traffic gaming and reward systems. Users can play dice games, earn rewards, manage withdrawals, and participate in a referral program.
+A comprehensive Telegram bot built with Python, aiogram, and PostgreSQL that allows users to earn rewards through games, daily bonuses, and referrals. The bot is designed for high traffic and can be deployed on Render.
 
 ## 🚀 Features
 
-### 🎮 Gaming System
-- **Dice Rolling**: Roll dice to earn random rewards (1-6 with different payout multipliers)
-- **Daily Limits**: Configurable daily roll limits to prevent abuse
-- **Cooldown System**: Rate limiting to prevent spam
-- **Game History**: Track all game plays and rewards
+### User Features
+- **🎲 Dice Game**: Roll dice daily to earn random rewards (1-6 dice values with different point rewards)
+- **💰 Balance System**: Track earnings and current balance with transaction history
+- **👤 Profile Management**: View user stats, join date, and referral information
+- **💸 Withdrawal System**: Request withdrawals when reaching minimum threshold
+- **📜 Transaction History**: View all balance-affecting activities
+- **👥 Referral Program**: Earn rewards by inviting friends with unique referral links
+- **🎁 Daily Bonus**: Claim daily bonuses every 24 hours
+- **⏱️ Rate Limiting**: Prevents spam with cooldown periods
 
-### 💰 Reward System
-- **Balance Management**: Real-time balance tracking with PostgreSQL
-- **Transaction History**: Complete audit trail of all balance changes
-- **Daily Bonuses**: Claim daily rewards (24-hour cooldown)
-- **Referral Program**: Earn rewards for inviting friends
-
-### 💸 Withdrawal System
-- **Minimum Threshold**: Configurable minimum withdrawal amounts
-- **Admin Approval**: All withdrawals require admin approval
-- **Status Tracking**: Pending, approved, or rejected status
-- **Automatic Refunds**: Rejected withdrawals are automatically refunded
-
-### 👥 User Management
-- **Auto Registration**: Users are automatically created on first interaction
-- **Profile System**: View user stats, balance, and transaction history
-- **Referral Links**: Unique referral links for each user
-- **Admin Panel**: Comprehensive admin controls
-
-### ⚙️ Admin Features
-- **User Management**: View all users and their statistics
-- **Withdrawal Management**: Approve or reject withdrawal requests
-- **Configuration**: Dynamic settings management
-- **Broadcasting**: Send messages to all users
-- **Statistics**: Real-time bot usage statistics
+### Admin Features
+- **⚙️ Admin Panel**: Complete admin dashboard with user management
+- **👥 User Management**: View all users and their statistics
+- **💸 Withdrawal Management**: Approve/reject withdrawal requests
+- **⚙️ Settings Management**: Configure bot parameters dynamically
+- **📢 Broadcast System**: Send messages to all users
+- **📊 Statistics**: View bot usage and financial statistics
 
 ## 🛠️ Tech Stack
 
@@ -47,75 +34,66 @@ A comprehensive Telegram bot built with Python, aiogram, and PostgreSQL for high
 ## 📁 Project Structure
 
 ```
-telegram-bot/
-│
-├── bot.py                 # Main bot entry point
-├── config.py              # Configuration and environment variables
-├── requirements.txt       # Python dependencies
-├── Procfile              # Render deployment configuration
-├── .env                  # Environment variables (not in git)
-│
+project/
+├── bot.py                 # Main bot file
+├── config.py             # Configuration and environment variables
+├── requirements.txt      # Python dependencies
+├── Procfile             # Render deployment configuration
+├── .env                 # Environment variables (not in repo)
 ├── database/
 │   ├── __init__.py
-│   ├── models.py         # SQLAlchemy database models
-│   └── db.py            # Database connection and operations
-│
+│   ├── models.py        # Database models
+│   └── db.py           # Database connection and operations
 ├── handlers/
 │   ├── __init__.py
-│   ├── user.py          # User-related handlers
-│   ├── admin.py         # Admin panel handlers
-│   ├── games.py         # Game mechanics handlers
-│   └── withdraw.py      # Withdrawal system handlers
-│
+│   ├── user.py         # User-related handlers
+│   ├── admin.py        # Admin panel handlers
+│   ├── games.py        # Game mechanics handlers
+│   └── withdraw.py     # Withdrawal management handlers
 └── utils/
     ├── __init__.py
-    ├── helpers.py       # Utility functions
-    ├── keyboards.py     # Telegram keyboard layouts
-    └── logger.py        # Logging configuration
+    ├── helpers.py      # Helper functions
+    ├── keyboards.py    # Keyboard layouts
+    └── logger.py       # Logging configuration
 ```
 
 ## 🚀 Quick Start
 
-### 1. Prerequisites
-
-- Python 3.11 or higher
-- PostgreSQL database
-- Telegram Bot Token (from @BotFather)
-
-### 2. Installation
+### 1. Clone and Setup
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
+git clone <your-repo>
 cd telegram-bot
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 3. Configuration
+### 2. Environment Configuration
 
-1. **Create a `.env` file** in the project root:
+Create a `.env` file with the following variables:
+
 ```env
 BOT_TOKEN=your_bot_token_here
 DATABASE_URL=postgresql://username:password@localhost:5432/telegram_bot
-ADMIN_ID=your_telegram_user_id
+ADMIN_ID=your_admin_telegram_id
 ```
 
-2. **Set up PostgreSQL database**:
-```sql
-CREATE DATABASE telegram_bot;
+### 3. Database Setup
+
+The bot will automatically create all necessary tables on first run. For manual setup:
+
+```python
+# Run this once to initialize the database
+from database.db import db
+import asyncio
+
+async def init_db():
+    await db.create_tables()
+    await db.init_default_config()
+
+asyncio.run(init_db())
 ```
 
-### 4. Database Initialization
-
-The bot will automatically create all necessary tables and initialize default configuration on first run. No manual migration is required.
-
-### 5. Run the Bot
+### 4. Run Locally
 
 ```bash
 python bot.py
@@ -125,169 +103,176 @@ python bot.py
 
 ### 1. Prepare for Deployment
 
-1. **Update `requirements.txt`** (already done):
-```
-aiogram==3.4.1
-asyncpg==0.29.0
-python-dotenv==1.0.0
-```
-
-2. **Create `Procfile`** (already done):
-```
-web: python bot.py
-```
-
-### 2. Deploy to Render
-
-1. **Connect your GitHub repository** to Render
-2. **Create a new Web Service** on Render
-3. **Configure environment variables**:
-   - `BOT_TOKEN`: Your Telegram bot token
+1. **Update bot username**: In `handlers/user.py`, replace `"your_bot_username"` with your actual bot username
+2. **Set environment variables** in Render dashboard:
+   - `BOT_TOKEN`: Your bot token from @BotFather
    - `DATABASE_URL`: Your PostgreSQL connection string
    - `ADMIN_ID`: Your Telegram user ID
 
-4. **Deploy**: Render will automatically build and deploy your bot
+### 2. Deploy to Render
 
-### 3. Database Setup on Render
+1. Connect your GitHub repository to Render
+2. Create a new **Web Service**
+3. Use these settings:
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `python bot.py`
+   - **Environment**: Python 3.11
 
-1. **Create a PostgreSQL database** on Render
-2. **Copy the database URL** to your environment variables
-3. **The bot will automatically initialize** the database schema
+### 3. Database Setup
 
-## ⚙️ Configuration
-
-All bot settings are stored in the database and can be modified by admins:
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `currency_symbol` | ₦ | Currency symbol for display |
-| `min_withdrawal` | 1000 | Minimum withdrawal amount |
-| `daily_bonus` | 100 | Daily bonus amount |
-| `referral_reward` | 50 | Reward for successful referrals |
-| `dice_cooldown` | 300 | Seconds between dice rolls |
-| `max_daily_rolls` | 10 | Maximum dice rolls per day |
+1. Create a PostgreSQL database on Render
+2. Copy the database URL to your environment variables
+3. The bot will automatically create tables on first run
 
 ## 🎮 Bot Commands
 
 ### User Commands
 - `/start` - Start the bot and register
-- `🎲 Play Game` - Play dice game
-- `💰 Balance` - Check balance
-- `👤 Profile` - View profile
-- `💸 Withdraw` - Request withdrawal
-- `📜 Transactions` - View transaction history
-- `👥 Referrals` - Get referral link
-- `🎁 Daily Bonus` - Claim daily bonus
-- `ℹ️ Help` - Show help information
+- `/help` - Show help information
+
+### Menu Buttons
+- **🎲 Play Game** - Roll dice to earn rewards
+- **💰 Balance** - Check current balance
+- **👤 Profile** - View profile information
+- **💸 Withdraw** - Request withdrawal
+- **📜 Transactions** - View transaction history
+- **👥 Referrals** - Get referral link and stats
+- **🎁 Daily Bonus** - Claim daily bonus
+- **ℹ️ Help** - Show help information
 
 ### Admin Commands
-- `⚙️ Admin Panel` - Access admin controls
-- Admin panel includes:
-  - User management
-  - Withdrawal approval
-  - Settings configuration
-  - Broadcasting
-  - Statistics
+- **⚙️ Admin Panel** - Access admin dashboard (admin only)
 
-## 🔧 Database Schema
+## ⚙️ Configuration
 
-### Users Table
-- `id` - Primary key
-- `user_id` - Telegram user ID
-- `username` - Telegram username
-- `balance` - Current balance
-- `total_earned` - Lifetime earnings
-- `referral_count` - Number of referrals
-- `referrer_id` - ID of user who referred them
-- `join_date` - Account creation date
+The bot uses a dynamic configuration system stored in the database. Admins can modify these settings:
 
-### Transactions Table
-- `id` - Primary key
-- `user_id` - User who made the transaction
-- `transaction_type` - Type (game, bonus, referral, withdrawal)
-- `amount` - Transaction amount
-- `description` - Transaction description
-- `created_at` - Transaction timestamp
+- **Currency Symbol**: Default "₦" (Naira)
+- **Minimum Withdrawal**: Default 1000
+- **Daily Bonus**: Default 100
+- **Referral Reward**: Default 50
+- **Dice Cooldown**: Default 5 minutes
+- **Max Daily Rolls**: Default 10
 
-### Game History Table
-- `id` - Primary key
-- `user_id` - User who played
-- `dice_value` - Dice roll result
-- `reward` - Reward earned
-- `played_at` - Game timestamp
+## 🎲 Game Mechanics
 
-### Withdraw Requests Table
-- `id` - Primary key
-- `user_id` - User requesting withdrawal
-- `amount` - Withdrawal amount
-- `status` - pending/paid/rejected
-- `created_at` - Request timestamp
-- `processed_at` - Processing timestamp
+### Dice Game
+- Roll dice (1-6) to earn rewards
+- Rewards: dice_value × 10 points
+- Cooldown: 5 minutes between rolls
+- Daily limit: 10 rolls per day
+- Special reward for rolling 6: 100 points
 
-### Config Table
-- `id` - Primary key
-- `key` - Configuration key
-- `value` - Configuration value
-- `updated_at` - Last update timestamp
+### Daily Bonus
+- Claim once every 24 hours
+- Fixed amount (configurable by admin)
+- Resets at midnight UTC
 
-## 🛡️ Security Features
+### Referral System
+- Each user gets unique referral link
+- Both referrer and referee get rewards
+- Rewards are configurable by admin
+
+## 💰 Withdrawal System
+
+1. Users can request withdrawal when balance ≥ minimum
+2. Admin receives notification of new requests
+3. Admin can approve or reject requests
+4. Rejected requests refund the amount to user balance
+5. All actions are logged and tracked
+
+## 🔒 Security Features
 
 - **Rate Limiting**: Prevents spam and abuse
+- **Admin-only Commands**: Protected admin functions
 - **Input Validation**: All user inputs are validated
-- **Admin Controls**: Sensitive operations require admin privileges
-- **Transaction Logging**: Complete audit trail
-- **Error Handling**: Comprehensive error handling and logging
+- **Error Handling**: Comprehensive error handling
+- **Logging**: All actions are logged for audit
 
-## 📊 Monitoring
+## 📊 Database Schema
+
+### Users Table
+- User information, balance, referral stats
+- Tracks join date, last activity, daily limits
+
+### Transactions Table
+- All balance-affecting activities
+- Transaction type, amount, description, timestamp
+
+### Game History Table
+- Game play records
+- Dice values, rewards, timestamps
+
+### Withdraw Requests Table
+- Withdrawal request management
+- Status tracking, admin notes
+
+### Config Table
+- Dynamic configuration storage
+- Key-value pairs for bot settings
+
+## 🚀 Scaling Considerations
+
+The bot is designed for high traffic with:
+
+- **Async Operations**: All database operations are async
+- **Connection Pooling**: Efficient database connection management
+- **Rate Limiting**: Prevents abuse and ensures fair usage
+- **Modular Design**: Easy to add new features
+- **Error Recovery**: Graceful error handling and recovery
+
+## 🛠️ Development
+
+### Adding New Games
+
+1. Create new game handler in `handlers/games.py`
+2. Add game logic and reward calculation
+3. Update user interface and keyboards
+4. Add game history tracking
+
+### Adding New Features
+
+1. Create new handler module in `handlers/`
+2. Register handlers in `handlers/__init__.py`
+3. Update keyboards in `utils/keyboards.py`
+4. Add database models if needed
+
+## 📝 Logging
 
 The bot includes comprehensive logging:
+
 - **File Logging**: Daily log files
-- **Console Logging**: Real-time error monitoring
-- **Transaction Tracking**: All financial operations logged
-- **User Activity**: Registration and game activity logged
-
-## 🔄 Future Expansion
-
-The modular architecture supports easy expansion:
-- **New Games**: Add new game types in `handlers/games.py`
-- **Reward Systems**: Extend reward mechanisms
-- **Payment Methods**: Add more withdrawal options
-- **Analytics**: Enhanced statistics and reporting
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Database Connection Error**:
-   - Check `DATABASE_URL` in environment variables
-   - Ensure PostgreSQL is running and accessible
-
-2. **Bot Not Responding**:
-   - Verify `BOT_TOKEN` is correct
-   - Check bot logs for errors
-
-3. **Admin Commands Not Working**:
-   - Verify `ADMIN_ID` is set correctly
-   - Ensure you're using the correct Telegram user ID
-
-### Logs
-
-Check the log files for detailed error information:
-- Local: `bot_YYYYMMDD.log`
-- Render: Check the Render dashboard logs
-
-## 📝 License
-
-This project is open source and available under the MIT License.
+- **Console Logging**: Error-level messages
+- **Action Logging**: All user and admin actions
+- **Error Tracking**: Detailed error information
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## 📞 Support
+## 📄 License
 
-For support or questions, please contact the admin or create an issue in the repository.
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For support or questions:
+1. Check the logs for error messages
+2. Verify environment variables are set correctly
+3. Ensure database connection is working
+4. Contact the admin through the bot
+
+## 🔄 Updates
+
+The bot supports dynamic configuration updates without restart:
+- Admin can modify settings through the admin panel
+- Changes take effect immediately
+- No downtime required for configuration changes
 
 ---
 
-**Happy Gaming! 🎲🎉**
+**Built with ❤️ using Python, aiogram, and PostgreSQL**

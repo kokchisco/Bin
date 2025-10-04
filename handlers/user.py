@@ -126,8 +126,11 @@ async def referrals_handler(message: Message):
         await message.answer("❌ User not found. Please use /start to register.")
         return
     
-    # Get bot username (you might want to store this in config)
-    bot_username = "your_bot_username"  # Replace with actual bot username
+    # Get bot username from bot info
+    from aiogram import Bot
+    bot = Bot.get_current()
+    bot_info = await bot.get_me()
+    bot_username = bot_info.username
     referral_link = get_referral_link(bot_username, user_id)
     
     referrals_text = f"👥 <b>Referral Program</b>\n\n"

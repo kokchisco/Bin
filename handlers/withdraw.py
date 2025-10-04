@@ -42,7 +42,8 @@ async def approve_withdrawal_callback(callback: CallbackQuery):
             
             # Update status
             withdraw_request.status = "paid"
-            withdraw_request.processed_at = db.session_factory().get_current_time()
+            from datetime import datetime
+            withdraw_request.processed_at = datetime.utcnow()
             await session.commit()
         
         # Notify user
@@ -108,7 +109,8 @@ async def reject_withdrawal_callback(callback: CallbackQuery):
             
             # Update status
             withdraw_request.status = "rejected"
-            withdraw_request.processed_at = db.session_factory().get_current_time()
+            from datetime import datetime
+            withdraw_request.processed_at = datetime.utcnow()
             await session.commit()
             
             # Refund the amount to user balance
